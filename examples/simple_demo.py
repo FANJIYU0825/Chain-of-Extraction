@@ -10,6 +10,7 @@ from pathlib import Path
 
 # Add src to path for local development
 sys.path.insert(0, '../src')
+sys.path.insert(0, '.')
 
 
 def demo_configuration():
