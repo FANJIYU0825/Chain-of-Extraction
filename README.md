@@ -50,4 +50,80 @@ cosmetic-pipeline/
 ├── .env.example                # Environment variable template
 └── README.md                   # This file
 ```
+## 🤖 Usage
 
+All operations are run through the `main.py` script. You can specify which stages to execute.
+
+###  Running a Single Stage
+
+-   To run only the OCR stage:
+    ```bash
+    python main.py --run-ocr
+    ```
+
+-   To run only the LLM Regulation Structuring stage (assuming the `llm_refine` outputs already exist):
+    ```bash
+    python main.py --run-llm-regulation
+    ```
+
+### Running Multiple Stages Sequentially
+
+-   To run the OCR and Preprocessing stages from the beginning:
+    ```bash
+    python main.py --run-ocr --run-preprocess
+    ```
+
+-   **To run the entire pipeline from start to finish:**
+    ```bash
+    python main.py --run-ocr --run-preprocess --run-llm-refine --run-llm-regulation --run-llm-translation
+    ```
+
+### Using Other Parameters
+
+-   **Specify a different model**:
+    ```bash
+    python main.py --run-llm-refine --model-name gpt-4o
+    ```
+
+-   **Overwrite existing files**:
+    ```bash
+    python main.py --run-ocr --overwrite
+    ```
+
+-   **View all available options**:
+    ```bash
+    python main.py --help
+    ```
+
+---
+
+## 🔍 Pipeline Stages Explained
+
+1.  **Stage 1: OCR Processing (`--run-ocr`)**
+    -   **Input**: PDF files located in the `source_documents/` directory.
+    -   **Processing**: Uses an OCR service to read each page of the PDF, extracting text and tables. It also saves an image of each page.
+    -   **Output**: Structured text in `_ocr.json` files and page images in the `results/ocr/images/` subdirectory.
+
+2.  **Stage 2: Data Preprocessing (`--run-preprocess`)**
+    -   **Input**: `_ocr.json` files from the previous stage.
+    -   **Processing**: Cleans and formats the raw OCR table data, converting it into a row-by-row text format that is easier for LLMs to process.
+    -   **Output**: `_preprocessed.json` files in the `results/preprocess/` directory.
+
+3.  **Stage 3: LLM Content Refinement (`--run-llm-refine`)**
+    -   **Input**: `_preprocessed.json` files and their corresponding page images.
+    -   **Processing**: Leverages a multimodal LLM (e.g., GPT-4o) to correct potential OCR errors by cross-referencing the preprocessed text with the page image, thereby improving the accuracy of the extracted content.
+    -   **Output**: `_ocr_refine.json` files in the `results/llm_refine/` directory.
+
+4.  **Stage 4: LLM Regulation Structuring (`--run-llm-regulation`)**
+    -   **Input**: `_ocr_refine.json` files.
+    -   **Processing**: Instructs an LLM to convert the refined text into a structured JSON format based on a predefined schema (e.g., extracting ingredients, usage restrictions, reference numbers).
+    -   **Output**: `_regulation_structure.json` files in the `results/llm_regulation/` directory.
+
+5.  **Stage 5: LLM Extraction (`--run-llm-extraction`)**
+    -   **Input**: `_regulation_structure.json` files.
+    -   **Processing**: Extracting the data must include the expert domain 
+    -   **Output**: `_extraction.json` files in the `results/llm_extraction/` directory.
+5.  **Stage 6: LLM Translation (`--run-llm-translation`)**
+    -   **Input**: `_regulation_structure.json` files.
+    -   **Processing**: Translates specific fields within the structured data into a target language (e.g., translating English ingredient names to Chinese).
+    -   **Output**: `_translation.json` files in the `results/llm_translation/` directory.
