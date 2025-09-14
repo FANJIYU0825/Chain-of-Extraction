@@ -1,0 +1,1 @@
+"""Data models for the Chain of Extraction pipeline."""

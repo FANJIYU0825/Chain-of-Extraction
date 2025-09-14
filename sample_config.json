@@ -1,0 +1,13 @@
+{
+  "enable_ocr": true,
+  "enable_extraction": true,
+  "enable_structuring": true,
+  "enable_translation": true,
+  "target_languages": [
+    "en",
+    "es",
+    "fr"
+  ],
+  "chunk_size": 8000,
+  "max_retries": 3
+}
