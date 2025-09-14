@@ -39,7 +39,7 @@ cosmetic-pipeline/
 │   │    └── document1_translation.json
 │   └── llm_extraction/
 │       └── document1_extraction.json
-├── cosmetic_pipline/           # Project source code modules
+├── chain_pipline/           # Project source code modules
 │   ├── __init__.py
 │   ├── ocr_processor.py
 │   ├── doc_preprocessor.py
@@ -50,6 +50,13 @@ cosmetic-pipeline/
 ├── .env.example                # Environment variable template
 └── README.md                   # This file
 ```
+
+## setting 
+We use `uv`  
+##  Setup Instructions
+    uv init # intital the file 
+    uv install -r requirements.txt  # install the dependencies
+
 ## 🤖 Usage
 
 All operations are run through the `main.py` script. You can specify which stages to execute.
